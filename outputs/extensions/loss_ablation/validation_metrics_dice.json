@@ -1,0 +1,8 @@
+{
+  "loss": "dice",
+  "device": "cpu",
+  "epochs": 12,
+  "best_epoch": 11,
+  "mean_dice": 0.9942752370845543,
+  "mean_iou": 0.9886227925764214
+}

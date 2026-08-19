@@ -1,0 +1,8 @@
+{
+  "loss": "bce_dice",
+  "device": "cpu",
+  "epochs": 12,
+  "best_epoch": 11,
+  "mean_dice": 0.9957793725332422,
+  "mean_iou": 0.9915968983801837
+}

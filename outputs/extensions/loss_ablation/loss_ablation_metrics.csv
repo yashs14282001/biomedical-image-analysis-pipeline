@@ -1,0 +1,4 @@
+loss,mean_dice,mean_iou,checkpoint
+bce_dice,0.9957793725332422,0.9915968983801837,C:\Users\yasha\Downloads\biomedical_nuclei_hybrid_pipeline\models\unet_bce_dice.pt
+bce,0.9956578019554192,0.9913551451638181,C:\Users\yasha\Downloads\biomedical_nuclei_hybrid_pipeline\models\unet_bce.pt
+dice,0.9942752370845543,0.9886227925764214,C:\Users\yasha\Downloads\biomedical_nuclei_hybrid_pipeline\models\unet_dice.pt

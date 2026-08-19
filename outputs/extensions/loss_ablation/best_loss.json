@@ -1,0 +1,6 @@
+{
+  "loss": "bce_dice",
+  "mean_dice": 0.9957793725332422,
+  "mean_iou": 0.9915968983801837,
+  "checkpoint": "C:\\Users\\yasha\\Downloads\\biomedical_nuclei_hybrid_pipeline\\models\\unet_bce_dice.pt"
+}
