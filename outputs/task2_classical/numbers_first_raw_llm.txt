@@ -1,0 +1,1 @@
+{"n_objects": 9, "density_class": "low", "shape_regularity": "irregular", "quality_flag": "review"}

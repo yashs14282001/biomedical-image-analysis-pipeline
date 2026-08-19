@@ -1,0 +1,1 @@
+This image contains 37 connected objects with a mean object area of 353.70 pixels and a median area of 217.00 pixels. The foreground fraction is 0.1997, indicating a relatively low proportion of the image's total area. The mean eccentricity (0.739) and solidity (0.913) suggest a generally circular shape with minimal fragmentation.

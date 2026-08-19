@@ -1,0 +1,1 @@
+Connected objects: 23. Foreground fraction: 0.0722. Mean object area: 205.74 pixels; median area: 148.00 pixels. Mean eccentricity: 0.646. Mean solidity: 0.939. Mean object intensity: 0.253.

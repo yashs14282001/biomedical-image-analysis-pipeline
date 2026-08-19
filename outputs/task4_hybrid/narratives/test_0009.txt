@@ -1,0 +1,1 @@
+This image contains 21 connected objects with a mean area of 178.57 pixels and a median area of 139.00 pixels. The foreground fraction is 0.0572, indicating a low density class. The mean eccentricity is 0.619, solidity is 0.956, and object intensity is 0.244. **Review flag present due to quality_flag "review" in the JSON record.**

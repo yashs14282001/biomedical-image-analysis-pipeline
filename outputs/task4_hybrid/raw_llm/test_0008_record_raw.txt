@@ -1,0 +1,1 @@
+{"image_id": "test_0008", "n_objects": 23, "mean_area": 240.09, "density_class": "low", "quality_flag": "review"}

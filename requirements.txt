@@ -1,0 +1,12 @@
+numpy>=1.26
+pandas>=2.2
+matplotlib>=3.8
+Pillow>=10.0
+scikit-image>=0.26
+scikit-learn>=1.4
+torch>=2.2
+ollama>=0.4
+pydantic>=2.6
+requests>=2.31
+tqdm>=4.66
+pytest>=8.0

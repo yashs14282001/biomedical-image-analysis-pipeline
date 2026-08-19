@@ -1,0 +1,11 @@
+{
+  "n_objects": 9,
+  "foreground_fraction": 0.01971435546875,
+  "mean_area": 143.55555555555554,
+  "median_area": 118.0,
+  "mean_eccentricity": 0.49264973476433543,
+  "mean_solidity": 0.9558894733413682,
+  "mean_intensity": 0.26225904292530483,
+  "density_class_rule": "low",
+  "quality_flag_rule": "acceptable"
+}

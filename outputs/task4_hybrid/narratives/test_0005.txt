@@ -1,0 +1,1 @@
+The subject has a total of 16 connected objects, with a mean object area of 407.06 pixels and a median area of 226.50 pixels. The foreground fraction is 0.0994. The density class is classified as low. A review flag indicates that the assessment was reviewed.

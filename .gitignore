@@ -1,0 +1,19 @@
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.DS_Store
+.vscode/
+
+# Downloaded/processed assignment data
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+
+# Trained model weights can be large; remove this line if your lecturer expects weights in GitHub.
+models/*.pt
+
+# Generated runtime clutter
+*.log

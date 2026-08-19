@@ -1,0 +1,7 @@
+Write one short paragraph (maximum 90 words) describing the measured image-region characteristics. You cannot see the image. Use only the JSON record and numerical summary below. Do not add diagnoses, clinical implications, or unsupported visual claims. State uncertainty when appropriate.
+
+JSON RECORD:
+{{JSON_RECORD}}
+
+NUMERICAL SUMMARY:
+{{FEATURE_SUMMARY}}

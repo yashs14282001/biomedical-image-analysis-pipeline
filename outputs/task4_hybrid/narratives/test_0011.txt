@@ -1,0 +1,1 @@
+The image contains 20 connected objects with a mean area of 184.2 pixels and a median area of 144.5 pixels, indicating varying object sizes. The foreground fraction is low at 0.0562. The objects are solid (mean solidity: 0.957) and have moderate eccentricity (mean eccentricity: 0.643). A review flag is present due to quality concerns.

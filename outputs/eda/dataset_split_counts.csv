@@ -1,0 +1,4 @@
+split,n_images
+test,12
+train,80
+val,20

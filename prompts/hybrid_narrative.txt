@@ -1,0 +1,7 @@
+Write one concise paragraph (maximum 80 words) from the structured record and measured feature summary below. Treat the JSON record and measured numbers as the source of truth. Do not diagnose disease, infer patient outcomes, or add findings that are absent from the inputs. Mention a review/uncertain flag plainly if present.
+
+JSON RECORD:
+{{JSON_RECORD}}
+
+MEASURED FEATURES:
+{{FEATURE_SUMMARY}}

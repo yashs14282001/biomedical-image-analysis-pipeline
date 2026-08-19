@@ -1,0 +1,12 @@
+You are interpreting measured image-region statistics for an educational biomedical image-analysis pipeline. You cannot see the image. Use ONLY the numerical summary below. Do not diagnose disease, infer a patient condition, or invent visual findings that are not supported by the measurements. If the numbers are insufficient, use "uncertain".
+
+NUMERICAL SUMMARY:
+{{FEATURE_SUMMARY}}
+
+Return JSON only with exactly these fields:
+- n_objects: integer object count from the summary
+- density_class: "low", "medium", "high", or "uncertain"
+- shape_regularity: "regular", "mixed", "irregular", or "uncertain"
+- quality_flag: "acceptable", "review", "poor", or "uncertain"
+
+The object count is a measured fact and must match the summary exactly.
