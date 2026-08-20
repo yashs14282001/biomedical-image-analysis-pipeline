@@ -1,198 +1,341 @@
-# Auditable Hybrid Biomedical Image Analysis of Nuclei
+Auditable Hybrid Nuclei Image Analysis Using VLMs, Classical Features and U-Net
 
-A GitHub-ready implementation of the assignment pipeline:
+Overview
 
-**raw microscopy image → grayscale/256×256 → direct VLM description → classical Otsu features → small U-Net → region features → structured JSON → constrained narrative → aggregated CSV**
+This project implements an auditable biomedical image-analysis pipeline for nuclei microscopy images. It combines a local multimodal VLM, classical image processing, a PyTorch U-Net, and a hybrid structured reporting stage.
 
-The project is designed for **educational use only**. The language-model outputs are deliberately descriptive rather than diagnostic, and measured/structured values are retained separately from generated narrative text.
+The system is designed for educational use only and is not intended for clinical diagnosis or medical decision-making.
 
-## What is included
+Pipeline
 
-| Assignment item | Implementation | Main outputs |
-|---|---|---|
-| Task 1: preparation + EDA + multimodal LLM | `01_prepare_eda.py`, `02_task1_vlm.py` | sample images, intensity histogram, naive VLM output, schema-valid JSON, 3 repeated runs |
-| Task 2: classical features + LLM | `03_task2_classical_llm.py` | Otsu mask, cleaned components, `regionprops_table` CSV, numbers-only JSON + narrative |
-| Task 3: U-Net | `04_task3_train_unet.py` | checkpoint, loss/Dice/IoU curves, validation panels, mean Dice/IoU, Otsu-vs-U-Net table/examples |
-| Task 4: hybrid test pipeline | `05_task4_hybrid_pipeline.py` | predicted masks, per-image feature CSVs, JSON records, narratives, `hybrid_test_records.csv` |
-| Extra credit: robustness | `06_extension_robustness.py` | corrupted-image propagation panel + trace CSV + clean/corrupt records/narratives |
-| Extra credit: loss ablation | `07_extension_loss_ablation.py` | BCE vs Dice vs BCE+Dice validation table and bar chart |
+Raw image
+  -> Grayscale + resize to 256x256
+  -> EDA
+  -> Task 1: Direct VLM description
+  -> Task 2: Otsu segmentation + regionprops + numbers-first LLM
+  -> Task 3: U-Net segmentation + Dice/IoU evaluation
+  -> Task 4: U-Net mask -> region features -> JSON -> narrative -> CSV
 
-## 1. VS Code setup
+Dataset
 
-Recommended: Python 3.10–3.12.
+Dataset source:
 
-### Windows PowerShell
+https://github.com/Nickolay-K/Assingnment-3-dataset
 
-```powershell
+The preprocessing pipeline converts images to grayscale and resizes them to 256x256.
+
+Split
+
+Images
+
+Training
+
+80
+
+Validation
+
+20
+
+Test
+
+12
+
+Main Results
+
+Method
+
+Mean Dice
+
+Mean IoU
+
+Otsu + morphology
+
+0.9782
+
+0.9573
+
+U-Net, Dice loss (12 epochs)
+
+0.9943
+
+0.9886
+
+U-Net, BCE loss (12 epochs)
+
+0.9957
+
+0.9914
+
+U-Net, BCE+Dice loss (12 epochs)
+
+0.9958
+
+0.9916
+
+Final U-Net, BCE+Dice (20 epochs)
+
+0.9966
+
+0.9933
+
+The best final U-Net checkpoint occurred at epoch 18.
+
+Task 1 - Multimodal VLM Description
+
+A representative image is analysed with llama3.2-vision through Ollama.
+
+Two prompt styles are compared:
+
+Naive prompt
+
+Optimised structured prompt
+
+The optimised prompt:
+
+avoids diagnosis
+
+restricts the model to visible evidence
+
+allows "uncertain"
+
+returns JSON
+
+uses the fields modality, tissue_type, notable_features, and image_quality
+
+Repeated runs are saved to show run-to-run variability.
+
+Outputs:
+
+outputs/task1_vlm/
+
+Task 2 - Classical Features + Numbers-First LLM
+
+The classical pipeline applies:
+
+Otsu thresholding
+
+Morphological cleanup
+
+Connected-component labelling
+
+regionprops_table feature extraction
+
+Measured features include area, eccentricity, solidity, mean intensity, object count, and foreground fraction.
+
+For the representative image:
+
+Connected objects: 9
+
+Foreground fraction: 0.0197
+
+Mean object area: 143.56 pixels
+
+Mean eccentricity: 0.493
+
+Mean solidity: 0.956
+
+Mean object intensity: 0.262
+
+Only measured numbers are supplied to the text LLM.
+
+Example structured output:
+
+{
+  "n_objects": 9,
+  "density_class": "low",
+  "shape_regularity": "irregular",
+  "quality_flag": "review"
+}
+
+Task 3 - U-Net Segmentation
+
+A compact PyTorch U-Net is trained on the nuclei dataset.
+
+Training setup:
+
+Image size: 256x256
+
+Optimizer: Adam
+
+Learning rate: 1e-3
+
+Epochs: 20
+
+Main loss: BCE + Dice
+
+Metrics: Dice and IoU
+
+Final results:
+
+Mean Dice = 0.9966
+Mean IoU  = 0.9933
+
+A loss-ablation extension compares BCE, Dice, and BCE+Dice.
+
+Task 4 - Hybrid Pipeline
+
+For each unseen test image:
+
+Test image
+  -> U-Net mask
+  -> connected components
+  -> region features
+  -> structured JSON
+  -> narrative
+
+Example record:
+
+{
+  "image_id": "test_0000",
+  "n_objects": 8,
+  "mean_area": 190.875,
+  "density_class": "low",
+  "quality_flag": "review"
+}
+
+All test records are aggregated into a pandas DataFrame and saved as CSV.
+
+Project Structure
+
+biomedical-image-analysis-pipeline/
+|
+|-- README.md
+|-- requirements.txt
+|-- run_all.py
+|-- .gitignore
+|
+|-- scripts/
+|   |-- 00_download_dataset.py
+|   |-- 01_prepare_eda.py
+|   |-- 02_task1_vlm.py
+|   |-- 03_task2_classical_llm.py
+|   |-- 04_task3_train_unet.py
+|   |-- 05_task4_hybrid_pipeline.py
+|   `-- 07_extension_loss_ablation.py
+|
+|-- src/
+|-- prompts/
+`-- outputs/
+    |-- eda/
+    |-- task1_vlm/
+    |-- task2_classical/
+    |-- task3_unet/
+    |-- task4_hybrid/
+    `-- extensions/
+
+Installation
+
+Clone
+
+git clone https://github.com/yashs14282001/biomedical-image-analysis-pipeline.git
+cd biomedical-image-analysis-pipeline
+
+Create a virtual environment
+
+Windows PowerShell:
+
 python -m venv .venv
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 .\.venv\Scripts\Activate.ps1
+
+Install dependencies
+
 python -m pip install --upgrade pip
-pip install -r requirements.txt
-```
+python -m pip install -r requirements.txt
 
-### macOS/Linux
+Ollama Setup
 
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-pip install -r requirements.txt
-```
+Install Ollama and pull the required models:
 
-If you have an NVIDIA GPU and want CUDA acceleration, install the PyTorch build appropriate for your CUDA setup before installing the remaining requirements.
-
-## 2. Install and prepare Ollama
-
-Install Ollama and make sure its local server/app is running. Then pull the two local models used by the project:
-
-```bash
 ollama pull llama3.2-vision
 ollama pull llama3.2:3b
-```
 
-- `llama3.2-vision` is used for the direct image description in Task 1.
-- `llama3.2:3b` is used for the numbers-only interpretation and final narrative steps.
+Check installed models:
 
-The prompt files are stored in `prompts/` so the exact optimised prompts can be copied into the report.
+ollama list
 
-## 3. Download the assignment dataset
+Test the vision model:
 
-```bash
+ollama run llama3.2-vision
+
+llama3.2-vision requires substantial RAM. Around 16 GB system memory or more is recommended.
+
+Running the Project
+
+Run the tasks in order:
+
 python scripts/00_download_dataset.py
-```
-
-Source used by the assignment:
-
-`https://github.com/Nickolay-K/Assingnment-3-dataset`
-
-The loader supports common biomedical layouts, including `images/` + `masks/`, train/validation/test subfolders, and sample folders containing one image plus several object masks.
-
-## 4. Run Tasks 1–4
-
-Run each task separately so you can inspect the outputs after every stage:
-
-```bash
 python scripts/01_prepare_eda.py
 python scripts/02_task1_vlm.py
 python scripts/03_task2_classical_llm.py
 python scripts/04_task3_train_unet.py --epochs 20 --loss bce_dice
 python scripts/05_task4_hybrid_pipeline.py
-```
 
-Or run the core pipeline end-to-end:
+Optional loss ablation:
 
-```bash
-python run_all.py --epochs 20
-```
-
-For debugging on a computer where Ollama is not running:
-
-```bash
-python run_all.py --epochs 2 --skip-llm
-```
-
-`--skip-llm` is only a debugging mode. Run the real LLM steps before submission because the rubric requires the local LLM outputs.
-
-## 5. Extra-credit experiments
-
-### Robustness trace
-
-```bash
-python scripts/06_extension_robustness.py --corruption blur
-python scripts/06_extension_robustness.py --corruption low_contrast
-python scripts/06_extension_robustness.py --corruption noise
-```
-
-This saves input-level changes, clean-vs-corrupt U-Net mask Dice, feature changes, and (unless `--no-llm` is used) clean/corrupt structured records and narratives.
-
-### Loss ablation
-
-```bash
 python scripts/07_extension_loss_ablation.py --epochs 12
-```
 
-This compares **BCE**, **Dice**, and **BCE+Dice** using the same validation split and saves `loss_ablation_metrics.csv` plus the comparison figure.
+Or run the main workflow with:
 
-## 6. Where the report values come from
+python run_all.py --epochs 20
 
-Use these generated files rather than manually copying numbers from the terminal:
+Output Folders
 
-- `outputs/eda/eda_sample_images.png`
-- `outputs/eda/eda_intensity_histogram.png`
-- `outputs/task1_vlm/optimized_repeated_runs.json`
-- `outputs/task1_vlm/run_to_run_variability.json`
-- `outputs/task2_classical/representative_regionprops.csv`
-- `outputs/task2_classical/numbers_first_record.json`
-- `outputs/task2_classical/numbers_first_narrative.txt`
-- `outputs/task3_unet/validation_metrics_bce_dice.json`
-- `outputs/task3_unet/method_comparison_metrics.csv`
-- `outputs/task3_unet/otsu_vs_unet_validation.csv`
-- `outputs/task3_unet/otsu_vs_unet_examples.png`
-- `outputs/task3_unet/validation_predictions_bce_dice.png`
-- `outputs/task3_unet/loss_curves_bce_dice.png`
-- `outputs/task3_unet/dice_iou_curves_bce_dice.png`
-- `outputs/task4_hybrid/hybrid_test_records.csv`
-- `outputs/task4_hybrid/records/*.json`
-- `outputs/task4_hybrid/narratives/*.txt`
-- `outputs/extensions/loss_ablation/loss_ablation_metrics.csv` (if run)
+outputs/eda/
+outputs/task1_vlm/
+outputs/task2_classical/
+outputs/task3_unet/
+outputs/task4_hybrid/
+outputs/extensions/
 
-## 7. Auditability / hallucination controls
+These folders contain the figures, metrics, JSON records, narratives, model comparisons, and aggregated CSV used in the report.
 
-The code intentionally separates deterministic measurements from generated language:
+Auditability and Hallucination Control
 
-1. Images are segmented before quantitative reporting.
-2. Region counts and areas are calculated by code, not guessed by an LLM.
-3. The direct VLM prompt prohibits diagnosis and allows the literal value `uncertain`.
-4. Ollama structured-output schemas are used for JSON-generating steps.
-5. In the hybrid stage, `image_id`, `n_objects`, and `mean_area` are overwritten with the measured values after parsing, so an LLM cannot silently change them.
-6. Raw LLM responses, feature tables, final JSON, and narratives are saved separately for auditing.
+The pipeline reduces hallucination risk by:
 
-These choices make the structured data the source of truth and the narrative a human-readable interpretation layer.
+explicitly prohibiting diagnosis in prompts
 
-## 8. Project structure
+allowing "uncertain" when evidence is insufficient
 
-```text
-biomedical_nuclei_hybrid_pipeline/
-├── config.py
-├── run_all.py
-├── requirements.txt
-├── prompts/
-├── scripts/
-│   ├── 00_download_dataset.py
-│   ├── 01_prepare_eda.py
-│   ├── 02_task1_vlm.py
-│   ├── 03_task2_classical_llm.py
-│   ├── 04_task3_train_unet.py
-│   ├── 05_task4_hybrid_pipeline.py
-│   ├── 06_extension_robustness.py
-│   └── 07_extension_loss_ablation.py
-├── src/
-│   ├── data.py
-│   ├── eda.py
-│   ├── classical.py
-│   ├── llm_utils.py
-│   ├── unet_model.py
-│   ├── train_utils.py
-│   ├── plotting.py
-│   ├── hybrid.py
-│   └── robustness.py
-├── data/
-├── models/
-├── outputs/
-└── tests/
-```
+preferring structured JSON to unrestricted free text
 
-## 9. Reproducibility notes
+passing only measured numbers to the Task 2 LLM
 
-- Random seed: `42` by default.
-- Preprocessing resolution: `256×256`.
-- Default U-Net loss: `BCE + Dice`.
-- Default optimiser: Adam, learning rate `1e-3`.
-- Default batch size: `4`.
-- Best checkpoint is selected by validation Dice.
-- Validation Dice and IoU are reported on thresholded binary predictions at `0.5`.
-- If the dataset already contains split folders, they are respected where possible; otherwise a deterministic train/validation/test split is created.
+retaining measured values separately from generated interpretations
 
-## 10. Before submission
+treating deterministic numerical fields as the source of truth
 
-Run the pipeline from a fresh VS Code terminal, confirm that all report figures/values were generated by the submitted code, and commit the source, prompts, README, and small output CSV/JSON/PNG files you want the marker to inspect. Avoid committing the original downloaded dataset unless your module explicitly asks you to redistribute it.
+generating narratives only after structured records are created
+
+These safeguards reduce, but do not eliminate, hallucination risk.
+
+Limitations
+
+Small and homogeneous dataset
+
+Internal validation only
+
+High Dice/IoU does not guarantee external generalisation
+
+VLM responses vary between runs
+
+JSON formatting does not guarantee semantic correctness
+
+No clinical validation has been performed
+
+Clinical Use Disclaimer
+
+This project is for educational and research purposes only.
+
+It is not a medical device, is not clinically validated, and must not be used for diagnosis, treatment, patient management, or other clinical decision-making.
+
+References
+
+Otsu, N. (1979). A Threshold Selection Method from Gray-Level Histograms. IEEE Transactions on Systems, Man, and Cybernetics, 9(1), 62-66.
+
+Ronneberger, O., Fischer, P., & Brox, T. (2015). U-Net: Convolutional Networks for Biomedical Image Segmentation. MICCAI.
+
+Sudre, C. H., Li, W., Vercauteren, T., Ourselin, S., & Cardoso, M. J. (2017). Generalised Dice Overlap as a Deep Learning Loss Function for Highly Unbalanced Segmentations.
+
+Ollama documentation: https://docs.ollama.com/
