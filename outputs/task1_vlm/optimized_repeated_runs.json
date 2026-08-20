@@ -1,0 +1,36 @@
+[
+  {
+    "run": 1,
+    "record": {
+      "modality": "uncertain",
+      "tissue_type": "uncertain",
+      "notable_features": [
+        "low contrast",
+        "blurred"
+      ],
+      "image_quality": "poor"
+    }
+  },
+  {
+    "run": 2,
+    "record": {
+      "modality": "uncertain",
+      "tissue_type": "uncertain",
+      "notable_features": [
+        "large, uniform background"
+      ],
+      "image_quality": "good"
+    }
+  },
+  {
+    "run": 3,
+    "record": {
+      "modality": "uncertain",
+      "tissue_type": "uncertain",
+      "notable_features": [
+        "uncertain"
+      ],
+      "image_quality": "uncertain"
+    }
+  }
+]

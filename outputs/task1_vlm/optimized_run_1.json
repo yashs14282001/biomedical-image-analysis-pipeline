@@ -1,0 +1,9 @@
+{
+  "modality": "uncertain",
+  "tissue_type": "uncertain",
+  "notable_features": [
+    "low contrast",
+    "blurred"
+  ],
+  "image_quality": "poor"
+}

@@ -1,0 +1,6 @@
+{
+  "n_runs": 3,
+  "n_unique_structured_outputs": 3,
+  "outputs_identical": false,
+  "note": "Generative runs can differ; exact variability depends on model version and sampling."
+}
